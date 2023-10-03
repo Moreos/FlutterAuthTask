@@ -29,7 +29,7 @@ class AuthScreen extends StatelessWidget {
               AutoRouter.of(context).replace(const MainRoute());
             });
           }
-          if (state is AuthFailed && state is AuthConnectionLost) {
+          if (state is AuthFailed || state is AuthConnectionLost) {
             textEditingControllerPass = TextEditingController();
           }
           return SafeArea(
