@@ -20,3 +20,7 @@ class AuthComplete extends AuthState {
 }
 
 class AuthFailed extends AuthState {}
+
+class AuthConnectionLost extends AuthState {}
+
+class AuthBadResponse extends AuthState {}

@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:dio/dio.dart';
 
@@ -15,17 +14,33 @@ class CommonApi {
   );
 
   CommonApi._internal() {
-    dio.options.baseUrl =
-    'http://45.10.110.181:8080';
+    dio.options.baseUrl = 'http://45.10.110.181:8080';
+    dio.interceptors.add(
+      InterceptorsWrapper(
+        onError: (DioException error, ErrorInterceptorHandler handler) async {
+          log('exception');
+          if (error.response?.statusCode == 422) {
+            log('bad data');
+            log(error.response!.toString());
+            handler.resolve(error.response!);
+          }
+          if (error.type == DioExceptionType.connectionError) {
+            log('connection');
+            handler.reject(error);
+          }
+        },
+      ),
+    );
   }
+
   factory CommonApi() {
     return _commonApi;
   }
 
   Future<Response?> get(
-      String url, {
-        Options? options,
-      }) async {
+    String url, {
+    Options? options,
+  }) async {
     Response? response;
     try {
       response = await dio.get(
@@ -38,10 +53,10 @@ class CommonApi {
   }
 
   Future<Response?> post(
-      String url, {
-        Options? options,
-        required Map<String, dynamic> data,
-      }) async {
+    String url, {
+    Options? options,
+    required Map<String, dynamic> data,
+  }) async {
     Response? response;
     try {
       response = await dio.post(
@@ -49,9 +64,10 @@ class CommonApi {
         options: options ?? defOptions,
         data: data,
       );
-    } on DioException catch (e) {
+    } catch (e) {
       log(e.toString());
     }
+
     return response;
   }
 }

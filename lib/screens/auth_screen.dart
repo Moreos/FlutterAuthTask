@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +29,7 @@ class AuthScreen extends StatelessWidget {
               AutoRouter.of(context).replace(const MainRoute());
             });
           }
-          if (state is AuthFailed) {
+          if (state is AuthFailed && state is AuthConnectionLost) {
             textEditingControllerPass = TextEditingController();
           }
           return SafeArea(
@@ -40,8 +39,13 @@ class AuthScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (state is AuthFailed)
-                    Text(
+                    const Text(
                       'Введены некорректные данные',
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  if (state is AuthConnectionLost)
+                    const Text(
+                      'Проблемы с соединением',
                       style: TextStyle(color: Colors.red),
                     ),
                   Container(
