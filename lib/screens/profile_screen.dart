@@ -67,7 +67,30 @@ class ProfileScreen extends StatelessWidget {
                       width: MediaQuery.of(context).size.width,
                       child: CupertinoButton(
                         onPressed: () {
-                          authBloc.add(AuthLogout());
+                          showCupertinoModalPopup<void>(
+                            context: context,
+                            builder: (BuildContext context) => CupertinoActionSheet(
+                              title: const Text('Выход'),
+                              message: const Text('Вы уверены что хотите выйти?'),
+                              actions: <CupertinoActionSheetAction>[
+                                CupertinoActionSheetAction(
+                                  isDefaultAction: true,
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Отмена'),
+                                ),
+                                CupertinoActionSheetAction(
+                                  isDestructiveAction: true,
+                                  onPressed: () {
+                                    authBloc.add(AuthLogout());
+                                    Navigator.pop(context);
+                                  },
+                                  child: const Text('Выйти'),
+                                ),
+                              ],
+                            ),
+                          );
                         },
                         alignment: Alignment.centerLeft,
                         padding: Paddings.defaultOnlyHorizontal,
